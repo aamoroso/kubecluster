@@ -6,7 +6,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 30m
-  url: "ssh://git@github.com:22/aamoroso/kubecluster.git"
+  url: "ssh://git@ssh.github.com:443/aamoroso/kubecluster.git"
   secretRef:
     name: github-deploy-key
   ref:
