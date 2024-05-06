@@ -19,6 +19,23 @@ cniConfig:
   name: none
 
 nodes:
+  - hostname: "kube1"
+    ipAddress: "192.168.0.56"
+    installDisk: "/dev/sda"
+    talosImageURL: factory.talos.dev/installer/376567988ad370138ad8b2698212367b8edcb69b5fd68c80be1f2ec7d603b4ba
+    controlPlane: true
+    networkInterfaces:
+      - deviceSelector:
+          hardwareAddr: "70:b5:e8:83:14:64"
+        dhcp: false
+        addresses:
+          - "192.168.0.56/24"
+        mtu: 1500
+        routes:
+          - network: 0.0.0.0/0
+            gateway: "192.168.0.1"
+        vip:
+          ip: "192.168.0.99"
   - hostname: "kube2"
     ipAddress: "192.168.0.57"
     installDisk: "/dev/sda"
@@ -30,6 +47,23 @@ nodes:
         dhcp: false
         addresses:
           - "192.168.0.57/24"
+        mtu: 1500
+        routes:
+          - network: 0.0.0.0/0
+            gateway: "192.168.0.1"
+        vip:
+          ip: "192.168.0.99"
+  - hostname: "kube3"
+    ipAddress: "192.168.0.58"
+    installDisk: "/dev/sda"
+    talosImageURL: factory.talos.dev/installer/376567988ad370138ad8b2698212367b8edcb69b5fd68c80be1f2ec7d603b4ba
+    controlPlane: true
+    networkInterfaces:
+      - deviceSelector:
+          hardwareAddr: "e4:54:e8:3b:fb:ac"
+        dhcp: false
+        addresses:
+          - "192.168.0.58/24"
         mtu: 1500
         routes:
           - network: 0.0.0.0/0
