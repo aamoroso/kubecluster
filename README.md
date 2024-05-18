@@ -1,4 +1,4 @@
-ASA was here
+ASA was ALSO here
 This is Adrian's template for deploying a single Kubernetes cluster. It was duplicated from onedr0p/cluster-template.
 
 
