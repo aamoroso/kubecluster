@@ -12,6 +12,6 @@ resources:
   - ./openebs.yaml
   - ./stakater.yaml
   - ./mojo2600.yaml
-  - ./metallb.yaml
+  # - ./metallb.yaml
   - ./rook-ceph.yaml
   - ./piraeus.yaml
