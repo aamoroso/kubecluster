@@ -13,7 +13,7 @@ spec:
   path: "./kubernetes/apps/system/intel-device-plugins/operator"
   sourceRef:
     kind: GitRepository
-    name: home-ops-kubernetes
+    name: home-kubernetes
   interval: 10m
   prune: true
   wait: true
@@ -35,7 +35,7 @@ spec:
   path: "./kubernetes/apps/system/intel-device-plugins/gpu"
   sourceRef:
     kind: GitRepository
-    name: home-ops-kubernetes
+    name: home-kubernetes
   interval: 30m
   prune: true
   wait: true
