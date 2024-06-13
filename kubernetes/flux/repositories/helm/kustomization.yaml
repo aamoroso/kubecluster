@@ -13,6 +13,6 @@ resources:
   - ./stakater.yaml
   - ./mojo2600.yaml
   # - ./metallb.yaml
-  # - ./rook-ceph.yaml
+  - ./rook-ceph.yaml
   - ./piraeus.yaml
   - ./backube.yaml
