@@ -64,11 +64,23 @@ spec:
         connections:
           requireMsgr2: true
       storage:
-        useAllNodes: true
-        useAllDevices: true
-        deviceFilter: nvme0n1
+        # useAllNodes: true           # onedr0p config.  I prefer specifying the devices as below
+        # useAllDevices: true
+        # deviceFilter: nvme0n1
+        useAllNodes: false
+        useAllDevices: false
         config:
           osdsPerDevice: "1"
+        nodes:
+          - name: "kube1"
+            devices:
+              - name: "/dev/disk/by-id/ata-EDILOCA_EN206_256GB_MX_00000000000051021-part3"
+          - name: "kube2"
+            devices:
+              - name: "/dev/disk/by-id/ata-EDILOCA_EN206_256GB_MX_00000000000051008-part3"
+          - name: "kube3"
+            devices:
+              - name: "/dev/disk/by-id/ata-EDILOCA_EN206_256GB_MX_00000000000050756-part3"
       placement:
         mgr: &placement
           nodeAffinity:
