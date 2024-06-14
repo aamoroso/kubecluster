@@ -16,4 +16,3 @@ resources:
   - ./rook-ceph.yaml
   - ./piraeus.yaml
   - ./backube.yaml
-  - ./mojo2600.yaml
