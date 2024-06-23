@@ -56,18 +56,22 @@ spec:
     ingress:
       app:
         enabled: true
-        className: nginx
+        className: external
         annotations:
-          nginx.ingress.kubernetes.io/auth-method: GET
-          nginx.ingress.kubernetes.io/auth-url: http://authelia.default.svc.cluster.local.:8888/api/verify
-          nginx.ingress.kubernetes.io/auth-signin: https://auth.${SECRET_EXTERNAL_DOMAIN}?rm=$request_method
-          nginx.ingress.kubernetes.io/auth-response-headers: Remote-User,Remote-Name,Remote-Groups,Remote-Email
-          nginx.ingress.kubernetes.io/auth-snippet: proxy_set_header X-Forwarded-Method $request_method;
-          hajimari.io/icon: mdi:bookshelf
-          gethomepage.dev/enabled: "true"
-          gethomepage.dev/group: Media
-          gethomepage.dev/name: Calibre
-          gethomepage.dev/icon: calibre.png
+          external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
+
+        # className: nginx
+        # annotations:
+        #   nginx.ingress.kubernetes.io/auth-method: GET
+        #   nginx.ingress.kubernetes.io/auth-url: http://authelia.default.svc.cluster.local.:8888/api/verify
+        #   nginx.ingress.kubernetes.io/auth-signin: https://auth.${SECRET_EXTERNAL_DOMAIN}?rm=$request_method
+        #   nginx.ingress.kubernetes.io/auth-response-headers: Remote-User,Remote-Name,Remote-Groups,Remote-Email
+        #   nginx.ingress.kubernetes.io/auth-snippet: proxy_set_header X-Forwarded-Method $request_method;
+        #   hajimari.io/icon: mdi:bookshelf
+        #   gethomepage.dev/enabled: "true"
+        #   gethomepage.dev/group: Media
+        #   gethomepage.dev/name: Calibre
+        #   gethomepage.dev/icon: calibre.png
         hosts:
           - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
             paths:
