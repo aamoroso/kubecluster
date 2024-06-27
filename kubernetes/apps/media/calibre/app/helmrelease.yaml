@@ -17,12 +17,12 @@ spec:
         namespace: flux-system
   maxHistory: 2
   install:
-    disableWait: true       # ASA debug.  With disableWait: true, Flux will no longer wait for the resources to become ready, so you can inspect the deployment and find the underlying issue e.g. kubectl describe deployment podinfo.
+    # disableWait: true       # ASA debug.  With disableWait: true, Flux will no longer wait for the resources to become ready, so you can inspect the deployment and find the underlying issue e.g. kubectl describe deployment podinfo.
     createNamespace: true
     remediation:
       retries: 3
   upgrade:
-    disableWait: true       # ASA debug.  With disableWait: true, Flux will no longer wait for the resources to become ready, so you can inspect the deployment and find the underlying issue e.g. kubectl describe deployment podinfo.
+    # disableWait: true       # ASA debug.  With disableWait: true, Flux will no longer wait for the resources to become ready, so you can inspect the deployment and find the underlying issue e.g. kubectl describe deployment podinfo.
     cleanupOnFail: true
     remediation:
       strategy: rollback
