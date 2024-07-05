@@ -18,7 +18,7 @@ spec:
         name: bjw-s
         namespace: flux-system
       interval: 5m
-  targetNamespace: freshrss
+  targetNamespace: media
   install:
     createNamespace: true
     remediation:
