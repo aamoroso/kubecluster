@@ -10,7 +10,7 @@ metadata:
 spec:
   dependsOn:
     - name: rook-ceph-cluster
-  path: ./kubernetes/apps/media/freshtest/app
+  path: ./kubernetes/apps/network/freshtest/app
   prune: true
   sourceRef:
     kind: GitRepository
