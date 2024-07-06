@@ -11,3 +11,4 @@ resources:
   - ./k8s-gateway/ks.yaml
   - ./pihole/ks.yaml
   # - ./metallb/ks.yaml
+  - ./freshtest/ks.yaml   # testing if freshrss will work in this namespace
