@@ -29,12 +29,12 @@ spec:
   values:
     # fullnameOverride: *name : ???
     # Container binds to 80, which requires root, it also starts with chmod  (BELOW WAS COMMENTED - ASA)
-    defaultPodOptions:
-      securityContext:
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
-        fsGroupChangePolicy: "OnRootMismatch"
+    # defaultPodOptions:
+    #   securityContext:
+    #     runAsUser: 1000
+    #     runAsGroup: 1000
+    #     fsGroup: 1000
+    #     fsGroupChangePolicy: "OnRootMismatch"
     controllers:
       freshrss:
         containers:
