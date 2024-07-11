@@ -1,11 +1,10 @@
-ASA was ALSO here
 This is Adrian's template for deploying a single Kubernetes cluster. It was duplicated from onedr0p/cluster-template.
 
 
 ## Adrian's Notes
 See https://www.notion.so/patrian/Setup-Talos-Linux-on-kube2-a832fb76a1964deba8ae044e0121ab94?pvs=4
 
-* I made this repo private rather than public as suggested below.  I can't see a good reason for it to be public and the SOPS encryption didnt seem to work
+* I made this repo private rather than public as suggested below.  I can't see a good reason for it to be public.
 *
 
 ---
