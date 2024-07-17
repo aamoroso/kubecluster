@@ -57,6 +57,7 @@ spec:
       app:
         enabled: true
         className: external
+        ingressClassName: external    # clutching at straws
         annotations:
           external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
 
