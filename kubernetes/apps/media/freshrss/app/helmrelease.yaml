@@ -58,10 +58,10 @@ spec:
             port: 80
     ingress:
       app:
-        className: internal   # ASA Trying internal - This works but the below external nginx-ingress does not work
-        # className: external
-        # annotations:
-        #   external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
+        # className: internal   # ASA Trying internal - This works but the below external nginx-ingress does not work
+        className: external
+        annotations:
+          external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
 
         # enabled: true                                         # Original HaProxy annotations from davralin
         # annotations:
