@@ -41,10 +41,10 @@ spec:
               CUSTOM_PORT: &port 8080           # Not necessary but just wanted to add the ref
               # PUID: "1000"
               # PGID: "1000"
-            securityContext:                    # Borrowed from Phycoforce
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
-              capabilities: { drop: ["ALL"] }
+            # securityContext:                    # Borrowed from Phycoforce
+            #   allowPrivilegeEscalation: false
+            #   readOnlyRootFilesystem: true
+            #   capabilities: { drop: ["ALL"] }
             probes:                             # Borrowed from Phycoforce
               liveness: &probes
                 enabled: true
@@ -64,11 +64,11 @@ spec:
                 memory: 324M
               limits:
                 memory: 604M
-        pod:
-          securityContext:
-            runAsUser: 65534
-            runAsGroup: 65534
-            runAsNonRoot: true
+        # pod:
+        #   securityContext:
+        #     runAsUser: 65534
+        #     runAsGroup: 65534
+        #     runAsNonRoot: true
     service:
       app:
         controller: *app
