@@ -13,4 +13,4 @@ resources:
   - ./stakater.yaml
   - ./backube.yaml
   - ./piraeus.yaml
-  - ./rook-ceph
+  - ./rook-ceph.yaml
