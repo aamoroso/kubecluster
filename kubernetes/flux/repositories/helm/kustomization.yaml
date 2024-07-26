@@ -11,3 +11,5 @@ resources:
   - ./metrics-server.yaml
   - ./openebs.yaml
   - ./stakater.yaml
+  - ./backube.yaml
+  - ./piraeus.yaml
