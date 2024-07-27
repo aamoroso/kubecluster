@@ -21,7 +21,7 @@ spec:
       version: 0.14.8
       sourceRef:
         kind: HelmRepository
-        name: metallb-charts
+        name: metallb
         namespace: flux-system
       interval: 5m
   values:                 # See https://github.com/metallb/metallb/blob/main/charts/metallb/values.yaml
