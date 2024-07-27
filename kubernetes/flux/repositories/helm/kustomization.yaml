@@ -14,7 +14,7 @@ resources:
   - ./backube.yaml
   - ./piraeus.yaml
   - ./rook-ceph.yaml
-
+  - ./metallb.yaml
   # For Observability
   - ./grafana.yaml
   - ./prometheus-community.yaml
