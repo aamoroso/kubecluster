@@ -15,6 +15,8 @@ resources:
   - ./piraeus.yaml
   - ./rook-ceph.yaml
   - ./metallb.yaml
+  - ./mojo2600.yaml
+
   # For Observability
   - ./grafana.yaml
   - ./prometheus-community.yaml
