@@ -1,0 +1,30 @@
+---
+##
+# This kustomization depends on the metallb kustomization.
+# This is because we have a chicken-and-egg problem whereby the CRs in the]
+# default-pool.yaml cannot be created before the metallb resources are created
+# The solution is to create a second Kustomization for the MetalLB CRs,
+# and make it depend on the first Kustomization (MetalLB itself).
+# I got this idea from https://geek-cookbook.funkypenguin.co.nz/kubernetes/loadbalancer/metallb/#kustomization-for-crs-config
+#
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+metadata:
+  name: config-metallb
+  namespace: flux-system
+spec:
+  interval: 15m
+  dependsOn:
+  - name: metallb
+  path: ./kubernetes/apps/network/metallb/config
+  prune: true # remove any elements later removed from the above path
+  timeout: 2m # if not set, this defaults to interval duration, which is 1h
+  sourceRef:
+    kind: GitRepository
+    name: home-kubernetes
+  # healthChecks:
+  #   - apiVersion: apps/v1
+  #     kind: Deployment
+  #     name: metallb-controller
+  #     namespace: network
