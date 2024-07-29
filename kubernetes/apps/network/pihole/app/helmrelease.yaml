@@ -31,17 +31,17 @@ spec:
     serviceDns:
       type: LoadBalancer
       annotations:
-        # io.cilium/lb-ipam-ips: ${SECRET_LB_PIHOLE}
-        io.cilium/lb-ipam-ips:
-          configMapKeyRef:
-            name: pihole-config           # The ConfigMap this value comes from.
-            key: piholeIpAddress   # The key to fetch.
+        io.cilium/lb-ipam-ips: 192.168.0.240
+        # io.cilium/lb-ipam-ips:
+        #   configMapKeyRef:
+        #     name: pihole-config           # The ConfigMap this value comes from.
+        #     key: piholeIpAddress   # The key to fetch.
 
-      # loadBalancerIP: ${SECRET_LB_PIHOLE}
-      loadBalancerIP:
-        configMapKeyRef:
-          name: pihole-config           # The ConfigMap this value comes from.
-          key: piholeIpAddress   # The key to fetch.
+      loadBalancerIP: 192.168.0.240
+      # loadBalancerIP:
+      #   configMapKeyRef:
+      #     name: pihole-config           # The ConfigMap this value comes from.
+      #     key: piholeIpAddress   # The key to fetch.
 
 
 
