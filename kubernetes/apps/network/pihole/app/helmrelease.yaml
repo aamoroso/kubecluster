@@ -49,7 +49,8 @@ spec:
       enabled: false
 
     ingress:
-      ingressClassName: internal-nginx
+      # ingressClassName: internal-nginx
+      ingressClassName: internal
       enabled: true
       hosts:
         - pihole.${SECRET_DOMAIN}
