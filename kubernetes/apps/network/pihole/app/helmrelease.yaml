@@ -58,7 +58,8 @@ spec:
     persistentVolumeClaim:
       enabled: true
       accessModes:
-        - ReadWriteMany
+        # - ReadWriteMany
+        - ReadWriteOnce
       size: "10G"
       storageClassName: "ceph-filesystem"
 
