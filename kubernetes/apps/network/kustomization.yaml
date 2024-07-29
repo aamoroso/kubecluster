@@ -9,5 +9,5 @@ resources:
   - ./ingress-nginx/ks.yaml
   - ./k8s-gateway/ks.yaml
   - ./metallb/ks.yaml
-  - ./metallb/ks-config.yaml
-  - ./pihole/ks.yaml
+  # - ./metallb/ks-config.yaml    # Disabled
+  # - ./pihole/ks.yaml            # Disabled
