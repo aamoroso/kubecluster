@@ -63,8 +63,12 @@ spec:
 
     # adminPassword: ${SECRET_PIHOLE_PASSWORD}   # from flux secrets
     adminPassword:
-      secretRef:
-        name: password
+      # secretRef:
+      #   name: password
+      valueFrom:
+        secretKeyRef:
+          name: pihole-secrets
+          key: password
 
     DNS1: "1.1.1.1"
     DNS2: "8.8.8.8"
