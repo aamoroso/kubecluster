@@ -1,11 +1,22 @@
-This is Adrian's template for deploying a single Kubernetes cluster. It was duplicated from onedr0p/cluster-template.
+# Overview
+
+This repository contains the IaC to deploy my home Kubernetes cluster.  It was originally based off onedr0p/cluster-template.
+
+# Hardware
+My Kubernetes Cluster runs on three Dell Wyse 5070 thin clients.  Each has 20G RAM and a 256GB SATA M.2 card.  Each node runs Ubuntu with K3S.  One day I will try TALOS again but I had so much trouble trying to install it that I gave up and went with K3S.  Since then the cluster-template has moved on to support Talso only so I am on my own :)
 
 
-## Adrian's Notes
-See https://www.notion.so/patrian/Setup-Talos-Linux-on-kube2-a832fb76a1964deba8ae044e0121ab94?pvs=4
+
+# References
+## My Initial Deployment Notes
+- https://www.notion.so/patrian/Setup-Talos-Linux-on-kube2-a832fb76a1964deba8ae044e0121ab94?pvs=4
+
+
+
 
 
 ---
+The following is the template description from onedr0p...
 
 # ⛵ Cluster Template
 
