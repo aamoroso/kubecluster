@@ -44,6 +44,14 @@ spec:
       #     name: pihole-config           # The ConfigMap this value comes from.
       #     key: piholeIpAddress   # The key to fetch.
 
+    serviceWeb:
+      type: LoadBalancer
+      externalTrafficPolicy: Local
+      loadBalancerIP: ${SVC_PIHOLE_IP}
+      annotations:
+        io.cilium/lb-ipam-ips: 192.168.0.240
+        # metallb.universe.tf/allow-shared-ip: pihole-svc
+    virtualHost: "pihole.k.${SECRET_DOMAIN}"
 
 
     serviceDhcp:
@@ -52,13 +60,14 @@ spec:
     ingress:
       # ingressClassName: internal-nginx
       ingressClassName: internal
-      # enabled: true
-      enabled: false
+      enabled: true
+      # enabled: false
       hosts:
         - pihole.${SECRET_DOMAIN}
 
     persistentVolumeClaim:
-      enabled: true
+      # enabled: true
+      enabled: false
       accessModes:
         - ReadWriteMany
       size: "10G"
