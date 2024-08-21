@@ -1,5 +1,6 @@
 ---
 # Comes from https://github.com/rafaribe/home-ops/blob/main/kubernetes/main/apps/networking/pihole/app/helmrelease.yaml
+# ... which is no longer there :(
 
 # See https://artifacthub.io/packages/helm/mojo2600/pihole
 
@@ -27,7 +28,7 @@ spec:
       tag: "2024.03.1"
       pullPolicy: IfNotPresent
 
-    # I have MetalLB as my load balancer
+    # I have MetalLB as my load balancer - NO I DONT!
     serviceDns:
       type: LoadBalancer
       annotations:
@@ -51,15 +52,15 @@ spec:
     ingress:
       # ingressClassName: internal-nginx
       ingressClassName: internal
-      enabled: true
+      # enabled: true
+      enabled: false
       hosts:
         - pihole.${SECRET_DOMAIN}
 
     persistentVolumeClaim:
       enabled: true
       accessModes:
-        # - ReadWriteMany
-        - ReadWriteOnce
+        - ReadWriteMany
       size: "10G"
       storageClassName: "ceph-filesystem"
 
@@ -75,3 +76,12 @@ spec:
     DNS1: "1.1.1.1"
     DNS2: "8.8.8.8"
 
+    serviceTCP:
+      loadBalancerIP: 192.168.0.240
+      annotations:
+        io.cilium/lb-ipam-ips: 192.168.0.240
+
+    serviceUDP:
+      loadBalancerIP: 192.168.0.240
+      annotations:
+        io.cilium/lb-ipam-ips: 192.168.0.240
