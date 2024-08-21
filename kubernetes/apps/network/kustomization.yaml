@@ -10,4 +10,4 @@ resources:
   - ./k8s-gateway/ks.yaml
   # - ./metallb/ks.yaml           # Disabled
   # - ./metallb/ks-config.yaml    # Disabled
-  # - ./pihole/ks.yaml            # Disabled
+  - ./pihole/ks.yaml            # Disabled
