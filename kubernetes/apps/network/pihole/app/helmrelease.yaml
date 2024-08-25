@@ -47,7 +47,8 @@ spec:
     serviceWeb:
       type: LoadBalancer
       externalTrafficPolicy: Local
-      loadBalancerIP: ${SVC_PIHOLE_IP}
+      # loadBalancerIP: ${SVC_PIHOLE_IP}
+      loadBalancerIP: 192.168.0.240
       annotations:
         io.cilium/lb-ipam-ips: 192.168.0.240
         # metallb.universe.tf/allow-shared-ip: pihole-svc
@@ -60,8 +61,8 @@ spec:
     ingress:
       # ingressClassName: internal-nginx
       ingressClassName: internal
-      enabled: true
-      # enabled: false
+      # enabled: true
+      enabled: false
       hosts:
         - pihole.${SECRET_DOMAIN}
 
