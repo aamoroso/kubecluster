@@ -31,7 +31,8 @@ spec:
   uninstall:
     keepHistory: false
   values:
-    DNS1: 192.168.0.253
+    DNS1: 192.168.0.1
+    # DNS1: 192.168.0.253
     adlists:
       - https://www.github.developerdan.com/hosts/lists/tracking-aggressive-extended.txt
       - https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
@@ -51,9 +52,12 @@ spec:
       customSettings:
         # - rebind-domain-ok=/pitower.link/               # No idea what this is
         - rebind-domain-ok=/amoroso.name  /               # No idea what this is
-        - rev-server=192.168.0.0/24,192.168.0.253         # not sure about this either
-        - server=/lan/192.168.0.253
-        - server=//192.168.0.253
+        # - rev-server=192.168.0.0/24,192.168.0.253         # not sure about this either
+        - rev-server=192.168.0.0/24,192.168.0.1         # not sure about this either
+        # - server=/lan/192.168.0.253
+        - server=/lan/192.168.0.1
+        # - server=//192.168.0.253
+        - server=//192.168.0.1
       # upstreamServers:
       #   - server=/pitower.link/192.168.0.220
     dualStack:
