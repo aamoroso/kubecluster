@@ -50,6 +50,7 @@ spec:
     dnsmasq:
       customSettings:
         # - rebind-domain-ok=/pitower.link/               # No idea what this is
+        - rebind-domain-ok=/amoroso.name  /               # No idea what this is
         - rev-server=192.168.0.0/24,192.168.0.253         # not sure about this either
         - server=/lan/192.168.0.253
         - server=//192.168.0.253
@@ -78,7 +79,7 @@ spec:
       enabled: true
       hosts:
         # - pihole.pitower.link
-        - pihole.pitower.link
+        - pihole.${SECRET_DOMAIN}
       ingressClassName: internal
       path: /
       tls:
