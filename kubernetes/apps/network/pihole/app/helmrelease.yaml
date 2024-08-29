@@ -3,6 +3,8 @@
 ##
 # I copied this from https://github.com/swibrow/pitower/blob/main/pitower/kubernetes/infra/networking/pihole/app/helmrelease.yaml
 
+# TODO use doh for DNS over SSL with cloudflared
+
 # https://github.com/MoJo2600/pihole-kubernetes/blob/master/charts/pihole/values.yaml
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
@@ -32,6 +34,7 @@ spec:
     keepHistory: false
   values:
     DNS1: 192.168.0.1
+    DNS2: 9.9.9.9
     # DNS1: 192.168.0.253
     adlists:
       - https://www.github.developerdan.com/hosts/lists/tracking-aggressive-extended.txt
@@ -51,13 +54,13 @@ spec:
     dnsmasq:
       customSettings:
         # - rebind-domain-ok=/pitower.link/               # No idea what this is
-        - rebind-domain-ok=/amoroso.name  /               # No idea what this is
+        # - rebind-domain-ok=/amoroso.name  /               # No idea what this is
         # - rev-server=192.168.0.0/24,192.168.0.253         # not sure about this either
-        - rev-server=192.168.0.0/24,192.168.0.1         # not sure about this either
+        # - rev-server=192.168.0.0/24,192.168.0.1         # not sure about this either
         # - server=/lan/192.168.0.253
-        - server=/lan/192.168.0.1
+        # - server=/lan/192.168.0.1
         # - server=//192.168.0.253
-        - server=//192.168.0.1
+        # - server=//192.168.0.1
       # upstreamServers:
       #   - server=/pitower.link/192.168.0.220
     dualStack:
