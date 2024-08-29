@@ -1,97 +1,202 @@
 ---
-# Comes from https://github.com/rafaribe/home-ops/blob/main/kubernetes/main/apps/networking/pihole/app/helmrelease.yaml
-# ... which is no longer there :(
 
-# See https://artifacthub.io/packages/helm/mojo2600/pihole
+##
+# I copied this from https://github.com/swibrow/pitower/blob/main/pitower/kubernetes/infra/networking/pihole/app/helmrelease.yaml
 
+# https://github.com/MoJo2600/pihole-kubernetes/blob/master/charts/pihole/values.yaml
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: pihole
-  namespace: network
+  namespace: networking
 spec:
-  interval: 5m
+  interval: 15m
   chart:
     spec:
-      # renovate: registryUrl=https://mojo2600.github.io/pihole-kubernetes/
       chart: pihole
-      version: 2.26.1
+      version: 2.18.0
       sourceRef:
         kind: HelmRepository
         name: mojo2600
         namespace: flux-system
-
+  maxHistory: 3
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
   values:
-    replicaCount: 1
+    DNS1: 192.168.0.253
+    adlists:
+      - https://www.github.developerdan.com/hosts/lists/tracking-aggressive-extended.txt
+      - https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
+    admin:
+      existingSecret: pihole-secrets
+      passwordKey: password
+    affinity: {}
+    antiaff:
+      avoidRelease: pihole1
+      enabled: false
+      strict: true
+    blacklist: {}
+    customVolumes:
+      config: {}
+      enabled: false
+    dnsmasq:
+      customSettings:
+        # - rebind-domain-ok=/pitower.link/               # No idea what this is
+        - rev-server=192.168.0.0/24,192.168.0.253         # not sure about this either
+        - server=/lan/192.168.0.253
+        - server=//192.168.0.253
+      # upstreamServers:
+      #   - server=/pitower.link/192.168.0.220
+    dualStack:
+      enabled: false
+    extraEnvVars:
+      DNSMASQ_USER: root
+      # REV_SERVER: true
+      # REV_SERVER_CIDR: 192.168.0.0/24
+      # REV_SERVER_DOMAIN: lan
+      # REV_SERVER_TARGET: 192.168.0.1
+    extraEnvVarsSecret: {}
+    ftl:
+      MAXDBDAYS: 90
+    hostNetwork: "false"
+    hostname: ""
     image:
-      repository: "pihole/pihole"
-      tag: "2024.03.1"
       pullPolicy: IfNotPresent
-
-    # I have MetalLB as my load balancer - NO I DONT!
-    serviceDns:
-      type: LoadBalancer
-      annotations:
-        io.cilium/lb-ipam-ips: 192.168.0.240
-        # io.cilium/lb-ipam-ips:
-        #   configMapKeyRef:
-        #     name: pihole-config           # The ConfigMap this value comes from.
-        #     key: piholeIpAddress   # The key to fetch.
-
-      loadBalancerIP: 192.168.0.240
-      # loadBalancerIP:
-      #   configMapKeyRef:
-      #     name: pihole-config           # The ConfigMap this value comes from.
-      #     key: piholeIpAddress   # The key to fetch.
-
-    serviceWeb:
-      type: LoadBalancer
-      externalTrafficPolicy: Local
-      # loadBalancerIP: ${SVC_PIHOLE_IP}
-      loadBalancerIP: 192.168.0.240
-      annotations:
-        io.cilium/lb-ipam-ips: 192.168.0.240
-        # metallb.universe.tf/allow-shared-ip: pihole-svc
-    virtualHost: "pihole.k.${SECRET_DOMAIN}"
-
-
-    serviceDhcp:
-      enabled: false
-
+      repository: pihole/pihole
+      tag: 2023.10.0
     ingress:
-      # ingressClassName: internal-nginx
-      ingressClassName: internal
-      # enabled: true
-      enabled: false
+      annotations:
+        nginx.ingress.kubernetes.io/app-root: /admin
+      enabled: true
       hosts:
-        - pihole.${SECRET_DOMAIN}
-
+        # - pihole.pitower.link
+        - pihole.pitower.link
+      ingressClassName: internal
+      path: /
+      tls:
+        - hosts:
+            - pihole.${SECRET_DOMAIN}
+          secretName: pihole-tls          # ??
+    maxSurge: 1
+    maxUnavailable: 0
+    monitoring:
+      podMonitor:
+        enabled: true
+      sidecar:
+        enabled: true
+        image:
+          pullPolicy: IfNotPresent
+          repository: ekofr/pihole-exporter
+          tag: v0.4.0
+        port: 9617
+        resources:
+          limits:
+            memory: 128Mi
+    # nodeSelector:
+    #   kubernetes.io/arch: arm64
     persistentVolumeClaim:
-      # enabled: true
-      enabled: false
       accessModes:
         - ReadWriteMany
-      size: "10G"
-      storageClassName: "ceph-filesystem"
-
-    # adminPassword: ${SECRET_PIHOLE_PASSWORD}   # from flux secrets
-    adminPassword: "changeme"
-      # secretRef:
-      #   name: password
-      # valueFrom:
-      #   secretKeyRef:
-      #     name: pihole-secrets
-      #     key: password
-
-    DNS1: "1.1.1.1"
-    DNS2: "8.8.8.8"
-
-    serviceTCP:
-      loadBalancerIP: 192.168.0.240
+      enabled: true
+      size: 512Mi
+      storageClass: ceph-filesystem
+    # podAnnotations:
+    #   prometheus.io/port: "9617"
+    #   prometheus.io/path: /metrics
+    #   prometheus.io/scrape: "true"
+    podDnsConfig:
+      enabled: true
+      nameservers:
+        - 127.0.0.1
+        # - 192.168.0.253
+        - 192.168.0.1
+      policy: None
+    privileged: "true"
+    probes:
+      liveness:
+        enabled: true
+        failureThreshold: 10
+        initialDelaySeconds: 60
+        timeoutSeconds: 5
+      readiness:
+        enabled: true
+        failureThreshold: 3
+        initialDelaySeconds: 60
+        timeoutSeconds: 5
+    regex:
+      - ^ad([sxv]?[0-9]*|system)[_.-]([^.[:space:]]+\.){1,}|[_.-]ad([sxv]?[0-9]*|system)[_.-]
+      - ^(.+[_.-])?adse?rv(er?|ice)?s?[0-9]*[_.-]
+      - ^(.+[_.-])?telemetry[_.-]
+      - ^adim(age|g)s?[0-9]*[_.-]
+      - ^adtrack(er|ing)?[0-9]*[_.-]
+      - ^advert(s|is(ing|ements?))?[0-9]*[_.-]
+      - ^aff(iliat(es?|ion))?[_.-]
+      - ^analytics?[_.-]
+      - ^banners?[_.-]
+      - ^beacons?[0-9]*[_.-]
+      - ^count(ers?)?[0-9]*[_.-]
+      - ^mads\.
+      - ^pixels?[-.]
+      - ^stat(s|istics)?[0-9]*[_.-]
+      - ^https?://([A-Za-z0-9.-]*\.)?clicks\.beap\.bc\.yahoo\.com/
+      - ^https?://([A-Za-z0-9.-]*\.)?secure\.footprint\.net/
+      - ^https?://([A-Za-z0-9.-]*\.)?match\.com/
+      - ^https?://([A-Za-z0-9.-]*\.)?clicks\.beap\.bc\.yahoo(\.\w{2}\.\w{2}|\.\w{2,4})/
+      - ^https?://([A-Za-z0-9.-]*\.)?sitescout(\.\w{2}\.\w{2}|\.\w{2,4})/
+      - ^https?://([A-Za-z0-9.-]*\.)?appnexus(\.\w{2}\.\w{2}|\.\w{2,4})/
+      - ^https?://([A-Za-z0-9.-]*\.)?evidon(\.\w{2}\.\w{2}|\.\w{2,4})/
+      - ^https?://([A-Za-z0-9.-]*\.)?mediamath(\.\w{2}\.\w{2}|\.\w{2,4})/
+      - ^https?://([A-Za-z0-9.-]*\.)?scorecardresearch(\.\w{2}\.\w{2}|\.\w{2,4})/
+      - ^https?://([A-Za-z0-9.-]*\.)?doubleclick(\.\w{2}\.\w{2}|\.\w{2,4})/
+      - ^https?://([A-Za-z0-9.-]*\.)?flashtalking(\.\w{2}\.\w{2}|\.\w{2,4})/
+      - ^https?://([A-Za-z0-9.-]*\.)?turn(\.\w{2}\.\w{2}|\.\w{2,4})/
+      - ^https?://([A-Za-z0-9.-]*\.)?mathtag(\.\w{2}\.\w{2}|\.\w{2,4})/
+      - ^https?://([A-Za-z0-9.-]*\.)?googlesyndication(\.\w{2}\.\w{2}|\.\w{2,4})/
+      - ^https?://([A-Za-z0-9.-]*\.)?s\.yimg\.com/cv/ae/us/audience/
+      - ^https?://([A-Za-z0-9.-]*\.)?clicks\.beap/
+      - ^https?://([A-Za-z0-9.-]*\.)?.doubleclick(\.\w{2}\.\w{2}|\.\w{2,4})/
+      - ^https?://([A-Za-z0-9.-]*\.)?yieldmanager(\.\w{2}\.\w{2}|\.\w{2,4})/
+      - ^https?://([A-Za-z0-9.-]*\.)?w55c(\.\w{2}\.\w{2}|\.\w{2,4})/
+      - ^https?://([A-Za-z0-9.-]*\.)?adnxs(\.\w{2}\.\w{2}|\.\w{2,4})/
+      - ^https?://([A-Za-z0-9.-]*\.)?advertising\.com/
+      - ^https?://([A-Za-z0-9.-]*\.)?evidon\.com/
+      - ^https?://([A-Za-z0-9.-]*\.)?scorecardresearch\.com/
+      - ^https?://([A-Za-z0-9.-]*\.)?flashtalking\.com/
+      - ^https?://([A-Za-z0-9.-]*\.)?turn\.com/
+      - ^https?://([A-Za-z0-9.-]*\.)?mathtag\.com/
+      - ^https?://([A-Za-z0-9.-]*\.)?surveylink/
+      - ^https?://([A-Za-z0-9.-]*\.)?info\.yahoo\.com/
+      - ^https?://([A-Za-z0-9.-]*\.)?ads\.yahoo\.com/
+      - ^https?://([A-Za-z0-9.-]*\.)?global\.ard\.yahoo\.com/
+    replicaCount: 1
+    resources: {}
+    serviceDhcp:
+      enabled: false
+    serviceDns:
       annotations:
-        io.cilium/lb-ipam-ips: 192.168.0.240
-
-    serviceUDP:
-      loadBalancerIP: 192.168.0.240
-      annotations:
-        io.cilium/lb-ipam-ips: 192.168.0.240
+        "io.cilium/lb-ipam-ips": "192.168.0.240"
+      externalTrafficPolicy: Local
+      mixedService: true
+      port: 53
+      type: LoadBalancer
+    serviceWeb:
+      http:
+        enabled: true
+        port: 80
+      type: ClusterIP
+    strategyType: RollingUpdate
+    tolerations: []
+    topologySpreadConstraints: []
+    virtualHost: pi.hole
+    webHttp: "80"
+    webHttps: "443"
+    whitelist:
+      - translate.google.com
