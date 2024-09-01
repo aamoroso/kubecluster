@@ -191,7 +191,8 @@ spec:
     serviceDns:
       annotations:
         "io.cilium/lb-ipam-ips": "192.168.0.240"
-      externalTrafficPolicy: Local
+      # externalTrafficPolicy: Local
+      externalTrafficPolicy: Cluster
       mixedService: true
       port: 53
       type: LoadBalancer
