@@ -59,7 +59,7 @@ spec:
       customSettings:
         - server=/amoroso.name/192.168.0.81             # Set a custom forward nameserver for my cloudflare domain to be my gateway_vip address
         - local=/home.patrian.com/
-        - domain=home.patrian.com
+        # - domain=home.patrian.com
         # - rebind-domain-ok=/pitower.link/               # No idea what this is
         # - rebind-domain-ok=/amoroso.name  /               # No idea what this is
         # - rev-server=192.168.0.0/24,192.168.0.253         # not sure about this either
