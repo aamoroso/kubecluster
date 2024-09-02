@@ -1,11 +1,16 @@
----
-
 ##
-# I copied this from https://github.com/swibrow/pitower/blob/main/pitower/kubernetes/infra/networking/pihole/app/helmrelease.yaml
-
+# @author Adrian Amoroso
+# @date   1 Sep 2024
+#
+# Pi-hole® is a DNS sinkhole that protects your devices from unwanted content, without installing any client-side software.
+#
+# For values associated with the mojo2600 pihole chart see
+#   https://github.com/MoJo2600/pihole-kubernetes/blob/master/charts/pihole/values.yaml
+#
 # TODO use doh for DNS over SSL with cloudflared
+#
 
-# https://github.com/MoJo2600/pihole-kubernetes/blob/master/charts/pihole/values.yaml
+---
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
@@ -33,9 +38,8 @@ spec:
   uninstall:
     keepHistory: false
   values:
-    DNS1: 192.168.0.1
-    DNS2: 9.9.9.9
-    # DNS1: 192.168.0.253
+    DNS1: 192.168.0.1         # pfsense router
+    DNS2: 9.9.9.9             # Quad9
     adlists:
       - https://www.github.developerdan.com/hosts/lists/tracking-aggressive-extended.txt
       - https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
@@ -53,12 +57,12 @@ spec:
       enabled: false
     dnsmasq:
       customSettings:
+        - server=/amoroso.name/192.168.0.81             # Set a custom forward nameserver for my cloudflare domain to be my gateway_vip address
         # - rebind-domain-ok=/pitower.link/               # No idea what this is
         # - rebind-domain-ok=/amoroso.name  /               # No idea what this is
         # - rev-server=192.168.0.0/24,192.168.0.253         # not sure about this either
         # - rev-server=192.168.0.0/24,192.168.0.1         # not sure about this either
         # - server=/lan/192.168.0.253
-        # - server=/lan/192.168.0.1
         # - server=//192.168.0.253
         # - server=//192.168.0.1
       # upstreamServers:
@@ -85,7 +89,6 @@ spec:
         nginx.ingress.kubernetes.io/app-root: /admin
       enabled: true
       hosts:
-        # - pihole.pitower.link
         - pihole.${SECRET_DOMAIN}
       ingressClassName: internal
       path: /
@@ -124,7 +127,6 @@ spec:
       enabled: true
       nameservers:
         - 127.0.0.1
-        # - 192.168.0.253
         - 192.168.0.1
       policy: None
     privileged: "true"
@@ -190,9 +192,13 @@ spec:
       enabled: false
     serviceDns:
       annotations:
-        "io.cilium/lb-ipam-ips": "192.168.0.240"
-      # externalTrafficPolicy: Local
-      externalTrafficPolicy: Cluster
+        "io.cilium/lb-ipam-ips": "192.168.0.240"                # Use Cilium as our Network Load Balancer
+      externalTrafficPolicy: Cluster    # setting to 'local' normally tells a load balancer to only forward traffic to nodes
+                                        # with at least 1 ready pod to avoid a second hop. From the Cilium doco, L2 announcements isn’t
+                                        # currently aware of this setting and will announce the service IP on all nodes matching policies.
+                                        # If a node without a pod receives traffic, it will drop it.
+                                        # To fix this, we need to set the policy to .Spec.ExternalTrafficPolicy: Cluster.
+                                        # This is what fixed it for me.  I had been pulling my hair out for days!
       mixedService: true
       port: 53
       type: LoadBalancer
