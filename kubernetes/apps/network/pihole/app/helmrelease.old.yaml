@@ -1,0 +1,97 @@
+---
+# Comes from https://github.com/rafaribe/home-ops/blob/main/kubernetes/main/apps/networking/pihole/app/helmrelease.yaml
+# ... which is no longer there :(
+
+# See https://artifacthub.io/packages/helm/mojo2600/pihole
+
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: pihole
+  namespace: network
+spec:
+  interval: 5m
+  chart:
+    spec:
+      # renovate: registryUrl=https://mojo2600.github.io/pihole-kubernetes/
+      chart: pihole
+      version: 2.26.1
+      sourceRef:
+        kind: HelmRepository
+        name: mojo2600
+        namespace: flux-system
+
+  values:
+    replicaCount: 1
+    image:
+      repository: "pihole/pihole"
+      tag: "2024.03.1"
+      pullPolicy: IfNotPresent
+
+    # I have MetalLB as my load balancer - NO I DONT!
+    serviceDns:
+      type: LoadBalancer
+      annotations:
+        io.cilium/lb-ipam-ips: 192.168.0.240
+        # io.cilium/lb-ipam-ips:
+        #   configMapKeyRef:
+        #     name: pihole-config           # The ConfigMap this value comes from.
+        #     key: piholeIpAddress   # The key to fetch.
+
+      loadBalancerIP: 192.168.0.240
+      # loadBalancerIP:
+      #   configMapKeyRef:
+      #     name: pihole-config           # The ConfigMap this value comes from.
+      #     key: piholeIpAddress   # The key to fetch.
+
+    serviceWeb:
+      type: LoadBalancer
+      externalTrafficPolicy: Local
+      # loadBalancerIP: ${SVC_PIHOLE_IP}
+      loadBalancerIP: 192.168.0.240
+      annotations:
+        io.cilium/lb-ipam-ips: 192.168.0.240
+        # metallb.universe.tf/allow-shared-ip: pihole-svc
+    virtualHost: "pihole.k.${SECRET_DOMAIN}"
+
+
+    serviceDhcp:
+      enabled: false
+
+    ingress:
+      # ingressClassName: internal-nginx
+      ingressClassName: internal
+      # enabled: true
+      enabled: false
+      hosts:
+        - pihole.${SECRET_DOMAIN}
+
+    persistentVolumeClaim:
+      # enabled: true
+      enabled: false
+      accessModes:
+        - ReadWriteMany
+      size: "10G"
+      storageClassName: "ceph-filesystem"
+
+    # adminPassword: ${SECRET_PIHOLE_PASSWORD}   # from flux secrets
+    adminPassword: "changeme"
+      # secretRef:
+      #   name: password
+      # valueFrom:
+      #   secretKeyRef:
+      #     name: pihole-secrets
+      #     key: password
+
+    DNS1: "1.1.1.1"
+    DNS2: "8.8.8.8"
+
+    serviceTCP:
+      loadBalancerIP: 192.168.0.240
+      annotations:
+        io.cilium/lb-ipam-ips: 192.168.0.240
+
+    serviceUDP:
+      loadBalancerIP: 192.168.0.240
+      annotations:
+        io.cilium/lb-ipam-ips: 192.168.0.240
