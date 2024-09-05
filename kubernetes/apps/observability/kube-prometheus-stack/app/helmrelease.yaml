@@ -42,22 +42,32 @@ spec:
       ingress:
         enabled: true
         annotations:
-          external-dns.alpha.kubernetes.io/target: internal.amoroso.name
+          external-dns.alpha.kubernetes.io/target: external.${SECRET_DOMAIN}    # Not sure why we need this for an internal ingress
         ingressClassName: internal
         hosts: ["alertmanager.amoroso.name"]
         pathType: Prefix
       # alertmanagerSpec:
       #   useExistingSecret: true
       #   configSecret: alertmanager-secret
-      #   storage:
-      #     volumeClaimTemplate:
-      #       spec:
-      #         storageClassName: openebs-hostpath
-      #         resources:
-      #           requests:
-      #             storage: 1Gi
+        storage:
+          volumeClaimTemplate:
+            spec:
+              # storageClassName: ceph-filesystem
+              storageClassName: ceph-block
+              resources:
+                requests:
+                  storage: 1Gi
 
     prometheus:
+      ingress:
+        enabled: true
+        ingressClassName: internal
+        annotations:
+          external-dns.alpha.kubernetes.io/target: external.${SECRET_DOMAIN}    # Not sure why we need this for an internal ingress
+        hosts:
+          - prometheus.amoroso.name
+        pathType: Prefix
+
       prometheusSpec:
         retention: 24h
         resources:
@@ -68,6 +78,15 @@ spec:
         podMonitorSelector:
           matchLabels:
             app.kubernetes.io/component: monitoring
+        # storageSpec:
+        #   volumeClaimTemplate:
+        #     spec:
+        #       storageClassName: ceph-block
+        #       resources:
+        #         requests:
+        #           storage: 55Gi
+
+
     grafana:
       defaultDashboardsEnabled: false
       adminPassword: flux
