@@ -1,7 +1,5 @@
 ##
 #
-# @TODO
-# * add ingresses to dashboards
 #
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
@@ -46,13 +44,13 @@ spec:
         ingressClassName: internal
         hosts: ["alertmanager.amoroso.name"]
         pathType: Prefix
-      # alertmanagerSpec:
+      alertmanagerSpec:
       #   useExistingSecret: true
       #   configSecret: alertmanager-secret
         storage:
           volumeClaimTemplate:
             spec:
-              # storageClassName: ceph-filesystem
+              # storageClassName: ceph-filesystem     # I reckon ceph-filesystem is a better choice...?
               storageClassName: ceph-block
               resources:
                 requests:

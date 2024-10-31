@@ -1,4 +1,8 @@
 ---
+##
+# github repo package: https://github.com/linuxserver/docker-calibre/pkgs/container/calibre
+#
+
 # yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
@@ -35,7 +39,8 @@ spec:
           app:
             image:
               repository: ghcr.io/linuxserver/calibre
-              tag: version-v7.12.0@sha256:7cef47ba7fd105e2352b48fcff50c43a78415511beee2f742000cf9de5609331
+              tag:  version-v7.20.0@sha256:af61bfbfae6152140a793bfa13117bc95938d1d0b4f03647e685f42d2522f80c
+              # tag: version-v7.12.0@sha256:7cef47ba7fd105e2352b48fcff50c43a78415511beee2f742000cf9de5609331
             env:
               TZ: "${TIMEZONE}"
               CUSTOM_PORT: &port 8080           # Not necessary but just wanted to add the ref
