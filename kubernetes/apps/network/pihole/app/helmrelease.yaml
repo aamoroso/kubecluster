@@ -72,8 +72,9 @@ spec:
         # - server=/lan/192.168.0.253
         # - server=//192.168.0.253
         # - server=//192.168.0.1
-      # upstreamServers:
-      #   - server=/pitower.link/192.168.0.220
+      upstreamServers:
+        # - server=/pitower.link/192.168.0.220
+        - server=/home.patrian.com/192.168.0.1
     dualStack:
       enabled: false
     extraEnvVars:
