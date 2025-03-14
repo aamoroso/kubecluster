@@ -7,6 +7,9 @@
 # For values associated with the mojo2600 pihole chart see
 #   https://github.com/MoJo2600/pihole-kubernetes/blob/master/charts/pihole/values.yaml
 #
+# It is using https://github.com/pi-hole/docker-pi-hole/releases/2023.10.0 not pi-hole/pi-hole
+# To change the version you have to specify the tag as
+#
 # TODO use doh for DNS over SSL with cloudflared
 #
 
@@ -21,7 +24,7 @@ spec:
   chart:
     spec:
       chart: pihole
-      version: 2.29.1     # Upgrading to get pihole v6 TESTING!
+      version: 2.29.1     # Upgrading to get pihole v6 TESTING! - didnt bring it to v6
       # version: 2.26.1   # Working up to 12 Mar 2025
       # version: 2.18.0
       sourceRef:
@@ -86,8 +89,8 @@ spec:
     hostname: ""
     image:
       pullPolicy: IfNotPresent
-      repository: pihole/pihole
-      tag: 2023.10.0
+      repository: pihole/pihole  # There is no pihole/pihole
+    #   tag: 2023.10.0
     ingress:
       annotations:
         nginx.ingress.kubernetes.io/app-root: /admin
