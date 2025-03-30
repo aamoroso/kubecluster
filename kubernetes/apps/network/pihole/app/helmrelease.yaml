@@ -64,7 +64,7 @@ spec:
     dnsmasq:
       customSettings:
         - server=/amoroso.name/192.168.0.81             # Set a custom forward nameserver for my cloudflare domain to be my gateway_vip address
-        - server=/home.patrian.com/192.168.0.1          # Set a custom forward nameserver for the local domain
+        # - server=/home.patrian.com/192.168.0.1          # Set a custom forward nameserver for the local domain
         # - domain=home.patrian.com
         # - rebind-domain-ok=/pitower.link/               # No idea what this is
         # - rebind-domain-ok=/amoroso.name  /               # No idea what this is
@@ -73,9 +73,9 @@ spec:
         # - server=/lan/192.168.0.253
         # - server=//192.168.0.253
         # - server=//192.168.0.1
-      upstreamServers:
-        # - server=/pitower.link/192.168.0.220
-        - server=/home.patrian.com/192.168.0.1
+      # upstreamServers:
+        # - server=/pitower.link/192.168.0.220  # This is saying "Use DNS at 192;168.0.220 to resolve 'pitower.link'"
+        # - server=/home.patrian.com/192.168.0.1
     dualStack:
       enabled: false
     extraEnvVars:
