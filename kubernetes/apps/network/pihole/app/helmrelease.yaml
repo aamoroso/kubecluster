@@ -8,7 +8,10 @@
 #   https://github.com/MoJo2600/pihole-kubernetes/blob/master/charts/pihole/values.yaml
 #
 # It is using https://github.com/pi-hole/docker-pi-hole/releases/2023.10.0 not pi-hole/pi-hole
-# To change the version you have to specify the tag as
+# To change the version you have to specify the tag as  ...
+# Stupidly I never finished that sentance but the version number seems to be that of Mojo's artifact repo at
+# https://artifacthub.io/packages/helm/mojo2600/pihole
+# As at 1 April 2025, the latest version is 2.29.1
 #
 # TODO use doh for DNS over SSL with cloudflared
 #
@@ -149,7 +152,7 @@ spec:
         timeoutSeconds: 5
       readiness:
         enabled: true
-        failureThreshold: 3
+        failureThreshold: 10
         initialDelaySeconds: 60
         timeoutSeconds: 5
     regex:
